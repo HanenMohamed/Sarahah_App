@@ -4,6 +4,6 @@ const router = Router();
 
 
 router.post("/send-message/:receiverId",services.sendMessageService)
-router.get("/get-messages",services.getMessagesService)
+//router.get("/get-messages",services.getMessagesService)
 
 export default router;
