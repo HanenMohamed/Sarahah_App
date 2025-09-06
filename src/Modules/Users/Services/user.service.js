@@ -196,5 +196,5 @@ export const UpdatePasswordService = async (req, res, next) => {
   
     return res
       .status(200)
-      .json({ message: "Password updated successfully, please log in again" });
+      .json({ message: "Password is updated successfully, please log in again" });
   };
