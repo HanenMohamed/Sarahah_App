@@ -14,7 +14,7 @@ export const sendMessageService = async (req,res)=>{
     
 }
 
-export const getMessagesService = async (req,res)=>{
-    const messages = await Messages.find().populate([{path :"receiverId"}])
-    return res.status(200).json({messages})
-}
+// export const getMessagesService = async (req,res)=>{
+//     const messages = await Messages.find().populate([{path :"receiverId"}])
+//     return res.status(200).json({messages})
+// }
