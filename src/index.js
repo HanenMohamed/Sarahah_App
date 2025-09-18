@@ -17,8 +17,15 @@ app.use("/messages", messageRouter);
 dbConnection();
 
 //Error Handling Middleware
-app.use((err,req,res,next)=>{
+app.use(async(err,req,res,next)=>{
     console.log(err.stack);
+    if(req.session && req.session.inTransaction()){
+        // abort transaction
+        await req.session.abortTransaction()
+        //end session
+        req.session.endSession()
+        console.log("The transaction is aborted")
+    }
     res.status(err.cause||500 ).json({message:"somthing broke!",err:err.message,stack:err.stack});
 })
 
