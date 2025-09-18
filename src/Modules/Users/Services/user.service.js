@@ -6,6 +6,8 @@ import {sendEmail,emitter} from "../../../Utils/send-email.utils.js"
 import {customAlphabet} from"nanoid"
 import {v4 as uuidv4} from "uuid"
 import { generateToken,verifyToken } from "../../../Utils/tokens.utils.js";
+import mongoose from "mongoose";
+import Messages from "../../../DB/Models/message.model.js"
 
 const uniqueString= customAlphabet("dhfjugjjk34k",5)
 
@@ -117,15 +119,28 @@ export const UpdateAccountService = async (req,res)=>{
 }
 
 export const DeleteAccountService = async (req,res)=>{
-    
-        const {_id} = req.loggedInUser;
-        const deletedResult =await User.findByIdAndDelete(_id)
+      // start session
+      const session = await mongoose.startSession()
+      req.session = session
+        const {user:{_id}} = req.loggedInUser;
+      
+        //start Transaction
+        session.startTransaction()
+        
+        const deletedResult =await User.findByIdAndDelete(_id,{session})
         if(!deletedResult){
            return res.status(404).json({message:"User not found"})
         }
-
+        await Messages.deleteMany({receiverId:_id},{session})
+        //commit transaction
+        await session.commitTransaction()
+        //end session
+        session.endSession()
+        console.log("the transaction commited")
         return res.status(200).json({message:"User deleted successfully",deletedResult})
     }
+    
+   
 
 
 export const ListUsersService = async (req,res)=>{
