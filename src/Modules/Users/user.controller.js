@@ -1,9 +1,11 @@
 import {Router} from "express";
 import * as userService from "././Services/user.service.js";
 import { authenticationMiddleware } from "../../Middlewares/authentication.middleware.js";
+import { validateMiddleware } from "../../Middlewares/validation.middleware.js";
+import { SignUpSchema } from "../../Validators/Schemas/user.schema.js";
 const router = Router();
 
-router.post("/add",userService.SignUpService)
+router.post("/add",validateMiddleware(SignUpSchema),userService.SignUpService)
 router.post("/signin",userService.SignInService)
 router.put("/update",authenticationMiddleware,userService.UpdateAccountService)
 router.delete("/delete",authenticationMiddleware,userService.DeleteAccountService)
